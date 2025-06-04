@@ -1,0 +1,24 @@
+# Fichiers sensibles
+.env
+
+# Dossiers générés
+__pycache__/
+*.pyc
+
+# Fichiers FAISS (gros, générés automatiquement)
+faiss_clinique_amitie/
+
+# Dossiers de test ou de debug
+*.log
+*.tmp
+
+# Docker fichiers ignorables (si tu utilises dockerignore)
+.dockerignore
+
+# Venv local si tu l'utilises
+venv/
+.env/
+
+# Systèmes Windows / VS Code
+Thumbs.db
+.vscode/
