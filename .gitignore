@@ -7,7 +7,10 @@ __pycache__/
 
 # Fichiers FAISS (gros, générés automatiquement)
 faiss_clinique_amitie/
+
+# Dossier contenant les documents sources (ne pas versionner)
 documents/
+
 # Dossiers de test ou de debug
 *.log
 *.tmp
