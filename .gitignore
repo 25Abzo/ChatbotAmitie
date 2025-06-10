@@ -10,7 +10,8 @@ faiss_clinique_amitie/
 
 # Dossier contenant les documents sources (ne pas versionner)
 documents/
-
+explication.md
+explication2.md
 # Dossiers de test ou de debug
 *.log
 *.tmp

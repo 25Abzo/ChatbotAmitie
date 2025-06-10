@@ -1,6 +1,7 @@
+
 #  Chatbot RAG – Clinique de l’Amitié
 
-```
+```bash
 uvicorn main:app --reload
 ```
 
@@ -10,40 +11,36 @@ Ce projet vise à développer un **assistant virtuel intelligent** pour la **Cli
 
 ##  Objectifs
 
-* Offrir un accès instantané et automatisé aux informations médicales et administratives
-* Réduire la charge du personnel d’accueil et administratif
-* Rendre les services de la Clinique plus accessibles, notamment en ligne
-* Démontrer l'usage de l’IA générative dans un contexte de santé local
+- Offrir un accès instantané et automatisé aux informations médicales et administratives
+- Réduire la charge du personnel d’accueil
+- Rendre les services de la Clinique plus accessibles, notamment en ligne
+- Démontrer l’usage de l’IA générative dans un contexte de santé local
 
 ---
 
-##  Fonctionnement général
+##  Fonctionnement
 
-Le chatbot repose sur **deux modules principaux** :
+Le chatbot repose sur deux modules principaux :
 
-### 1. **Module de récupération (Retriever)**
+### 1.  Module de récupération (Retriever)
 
-* Utilise **FAISS** comme base vectorielle
-* Génère les **embeddings** avec `GoogleGenerativeAIEmbeddings`
-* Recherche les **passages les plus pertinents** via `similarity_search_with_score()`
+- Utilise **FAISS** pour la recherche vectorielle
+- Génère les embeddings avec `GoogleGenerativeAIEmbeddings`
+- Recherche les passages les plus pertinents via `similarity_search_with_score()`
 
-### 2. **Module de génération (LLM)**
+### 2.  Module de génération (LLM)
 
-* Génère des **réponses naturelles** à partir du contexte extrait
-* Utilise le modèle **Gemini 1.5 Flash**
-* Structure le prompt pour un **ton professionnel et informatif**
+- Produit des réponses naturelles basées sur le contexte
+- Utilise le modèle **Gemini 1.5 Flash**
+- Structure le prompt avec un ton professionnel et informatif
 
 ---
 
-##  Données et sources
+##  Données sources
 
-Les documents indexés sont issus de :
-
-* Informations internes de la clinique
-* Documents `.txt` déposés dans le dossier `documents/`
-* Données structurées (horaires, services, procédures)
-
-Les fichiers sont segmentés avec `RecursiveCharacterTextSplitter` en blocs de 500 caractères avec recouvrement, puis vectorisés.
+- Documents `.txt` dans `documents/`
+- Informations internes sur les services, horaires, procédures
+- Vectorisation après découpage par blocs de 500 caractères avec recouvrement
 
 ---
 
@@ -51,16 +48,16 @@ Les fichiers sont segmentés avec `RecursiveCharacterTextSplitter` en blocs de 5
 
 | Composant        | Technologie                  |
 | ---------------- | ---------------------------- |
-| Framework API    | FastAPI                      |
+| API              | FastAPI                      |
 | Vector DB        | FAISS                        |
 | Embeddings       | GoogleGenerativeAIEmbeddings |
-| Modèle LLM       | Gemini 1.5 Flash (Google)    |
+| LLM              | Gemini 1.5 Flash             |
 | Langage          | Python 3.10+                 |
 | Conteneurisation | Docker + Docker Compose      |
 
 ---
 
-##  Déploiement rapide avec Docker
+##  Déploiement local avec Docker
 
 ### 1. Cloner le dépôt
 
@@ -77,7 +74,7 @@ Créer un fichier `.env` à la racine :
 GOOGLE_API_KEY="VOTRE_CLE_API_GEMINI"
 ```
 
-### 3. Lancer le projet avec Docker Compose
+### 3. Lancer avec Docker Compose
 
 ```bash
 docker-compose up --build
@@ -85,16 +82,27 @@ docker-compose up --build
 
 ---
 
-##  Accès au chatbot
+##  Déploiement depuis Docker Hub (optionnel)
 
-* Interface principale : [http://localhost:8000](http://localhost:8000)
-* Interface Swagger (API docs) : [http://localhost:8000/docs](http://localhost:8000/docs)
+Une image Docker pré-construite est disponible pour un déploiement rapide :
+
+```bash
+docker pull abdoulaye0diaw/chatbot-amitie-rag:latest
+docker run -d -p 8000:8000 --env-file .env abdoulaye0diaw/chatbot-amitie-rag:latest
+```
 
 ---
 
-##  Exemples de requêtes
+##  Accès à l’API
 
-### Requête via Swagger ou Postman
+- Interface principale : [http://localhost:8000](http://localhost:8000)
+- Interface Swagger : [http://localhost:8000/docs](http://localhost:8000/docs)
+
+---
+
+##  Exemple de requête
+
+### Via Swagger / Postman :
 
 **POST** `/chat`
 
@@ -104,7 +112,7 @@ docker-compose up --build
 }
 ```
 
-### Requête via `curl`
+### Via `curl` :
 
 ```bash
 curl -X POST "http://localhost:8000/chat" \
@@ -114,9 +122,9 @@ curl -X POST "http://localhost:8000/chat" \
 
 ---
 
-##  Mise à jour des documents
+##  Mettre à jour les documents
 
-Si vous ajoutez ou modifiez des fichiers `.txt` dans le dossier `documents/`, vous devez **reconstruire l’index FAISS** :
+Si vous modifiez les fichiers `.txt`, reconstruisez l’index FAISS :
 
 ```bash
 python build.py
@@ -131,8 +139,8 @@ python build.py
 ├── documents/                # Textes sources (.txt)
 ├── faiss_clinique_amitie/   # Index vectoriel FAISS (auto-généré)
 ├── main.py                   # API FastAPI principale
-├── build.py                  # Construction de l’index vectoriel
-├── requirements-dev.txt      # Dépendances Python
+├── build.py                  # Construction de l’index
+├── requirements-dev.txt     # Dépendances Python
 ├── .env                      # Clé API Gemini (non versionné)
 ├── Dockerfile                # Image Docker
 └── docker-compose.yml        # Orchestration Docker
@@ -140,22 +148,17 @@ python build.py
 
 ---
 
-##  Optimisations apportées
+##  Optimisations
 
-* Nettoyage des réponses générées (suppression des phrases vagues)
-* Structuration des réponses (titres, paragraphes, listes)
-* Prompt adapté au domaine médical avec un ton informatif et rassurant
-* Séparation claire entre récupération et génération
+- Nettoyage des réponses (suppression des phrases vagues)
+- Structure des réponses améliorée (titres, paragraphes, listes)
+- Prompt médical rassurant et adapté au public local
+- Séparation claire entre récupération et génération
 
 ---
 
 ##  Auteur
 
-**Abdoulaye DIAW**
- [https://abdoulaye-diaw.vercel.app/](https://abdoulaye-diaw.vercel.app/)
+**Abdoulaye DIAW**  
+ [https://abdoulaye-diaw.vercel.app/](https://abdoulaye-diaw.vercel.app/)  
  Projet personnel autour de la RAG appliquée au secteur de la santé à Dakar.
-
----
-
-
-

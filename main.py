@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware  # Nouvelle importation
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from langchain_community.vectorstores import FAISS  
@@ -36,6 +37,15 @@ app = FastAPI(
     docs_url="/docs"
 )
 
+# Middleware CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Modèle pour la requête utilisateur
 class UserMessage(BaseModel):
     question: str
@@ -45,7 +55,7 @@ def redirect_to_docs():
     return RedirectResponse(url="/docs")
 
 @app.post("/chat")
-def chatbot_interaction(user_message: UserMessage):
+async def chatbot_interaction(user_message: UserMessage):  # Changé en async
     query = user_message.question
 
     # Recherche dans les documents vectorisés

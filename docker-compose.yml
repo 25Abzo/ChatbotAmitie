@@ -2,12 +2,16 @@ version: '3.8'
 
 services:
   chatbot:
-    build: .
+    image: abdoulaye0diaw/chatbot-amitie-rag:latest
     container_name: chatbot-amitie
     ports:
       - "8000:8000"
     env_file:
       - .env
     volumes:
-      - ./documents:/app/documents
+      - ./documents:/app/documents:ro
       - ./faiss_clinique_amitie:/app/faiss_clinique_amitie
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
